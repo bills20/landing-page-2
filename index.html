@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Scripts That Actually Convert</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradent(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .headline {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .copy {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .copy p {
+            margin-bottom: 1.5rem;
+        }
+
+        .copy strong {
+            color: #FFD700;
+            font-weight: 700;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-left: 3px solid #FFD700;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+
+        .cta-section {
+            margin-top: 3rem;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.5);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .urgency {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #FFD700;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .social-proof {
+            background: #111;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .proof-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .proof-card {
+            background: rgba(255, 215, 0, 0.05);
+            padding: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .proof-card:hover {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .proof-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-text {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 1.5rem;
+            }
+            
+            .cta-button {
+                padding: 1.2rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Calendly Popup Styles */
+        .calendly-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .calendly-popup-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .calendly-popup-content {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            background: #1a1a1a;
+            padding: 3rem 2rem;
+            border: 2px solid #FFD700;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .calendly-popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .calendly-popup-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .calendly-popup-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FFD700;
+            margin-bottom: 1rem;
+        }
+
+        .calendly-popup-text {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .calendly-popup-button {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .calendly-popup-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .calendly-popup-content {
+                width: 95%;
+                padding: 2rem 1.5rem;
+            }
+
+            .calendly-popup-title {
+                font-size: 1.5rem;
+            }
+
+            .calendly-popup-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <h1 class="headline">They're Stealing Your Customers On YouTube Right Now (While You Upload Videos That Get Ignored)</h1>
+            
+            <div class="copy">
+                <p><strong>Listen up.</strong></p>
+                
+                <p>Right this second, your ideal customer is on YouTube searching for answers. They've got a problem. They've got a credit card. And they're ready to buy.</p>
+                
+                <p><strong>But they're not finding YOU.</strong></p>
+                
+                <p>They're finding your competitor. The one who figured out how to make videos that don't just get views... but get LEADS. The one who's turning YouTube into a 24/7 sales machine while you're stuck wondering why your videos get 87 views and zero phone calls.</p>
+                
+                <p><strong>Here's the deal:</strong></p>
+                
+                <p>YouTube isn't the problem. Your message is. More specifically, your scripts are boring, unfocused, and they don't make people want to do business with you.</p>
+                
+                <p><strong>I write scripts that do the opposite.</strong></p>
+                
+                <p>Scripts that grab attention in the first 3 seconds. Scripts that hold people hostage until the end. Scripts that make viewers think "Holy shit, I need to work with this person" before the video even finishes.</p>
+                
+                <p>Personal brands are using my scripts to book out their calendars. Agencies are landing $10K clients. SaaS companies are getting demo requests from qualified buyers who watched ONE video.</p>
+                
+                <p>And you? You're probably still trying to "crack the algorithm" or waiting for some magic editing trick to save you.</p>
+                
+                <p><strong>Wrong game.</strong></p>
+                
+                <p>The SCRIPT is everything. Get that right, and YouTube prints money. Get it wrong, and you're just another face screaming into the void.</p>
+                
+                <p><strong>I've got exactly three spots open this month.</strong></p>
+                
+                <p>You want one of them or not?</p>
+            </div>
+
+            <div class="cta-section">
+                <button class="cta-button" onclick="window.open('https://x.com/messages/compose?recipient_id=1899471099974361088', '_blank')">Claim Your Spot Now</button>
+                <p class="urgency">⚡ Only 3 Spots Remaining This Month</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="social-proof">
+        <h2 style="font-size: 2rem; color: #FFD700; margin-bottom: 1rem;">Who This Works For...</h2>
+        <div class="proof-grid">
+            <div class="proof-card">
+                <div class="proof-title">Personal Brands:</div>
+                <div class="proof-text">You've got the expertise. What you don't have is a line of high-ticket clients who actually found you.<br><br>My scripts fix that. They position you as the obvious choice so people book calls already convinced they need to work with you. No more chasing. No more "let me think about it." Just qualified buyers ready to say yes.</div>
+            </div>
+            <div class="proof-card">
+                <div class="proof-title">Coaches:</div>
+                <div class="proof-text">Tired of discovery calls with tire-kickers who "need to think about it"?<br><br>When your script works, people show up pre-sold. They've already seen you solve their exact problem. They're not comparing options anymore—they're ready to enroll. That's how you fill your program with serious clients who actually pay premium prices.</div>
+            </div>
+            <div class="proof-card">
+                <div class="proof-title">Agencies:</div>
+                <div class="proof-text">Stop competing with bottom-feeders on price.<br><br>The right YouTube video makes you THE agency, not another agency. Prospects come to you already convinced you understand their business. They're ready to pay $10K, $25K, $50K+ without the usual negotiation dance. This is how you stop chasing and start closing real deals.</div>
+            </div>
+            <div class="proof-card">
+                <div class="proof-title">SaaS Companies:</div>
+                <div class="proof-text">Burning cash on ads for demo requests that go nowhere?<br><br>My scripts pre-sell your software before the demo call. Prospects watch you solve their exact problem, get excited, and book a demo already convinced. You're not explaining what it does anymore—you're just showing them how to get started. Higher conversions. Lower acquisition cost. Actual ROI from YouTube.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendly Popup -->
+    <div class="calendly-popup-overlay" id="calendlyPopup">
+        <div class="calendly-popup-content">
+            <button class="calendly-popup-close" onclick="closeCalendlyPopup()">×</button>
+            <h3 class="calendly-popup-title">Ready To Talk?</h3>
+            <p class="calendly-popup-text">Let's discuss how my scripts can turn your YouTube channel into a lead-generating machine.</p>
+            <a href="https://calendly.com/tinuoyeolasubomi/30min" target="_blank" class="calendly-popup-button">Book Your Call Now</a>
+        </div>
+    </div>
+
+    <script>
+        // Show Calendly popup after 20 seconds
+        setTimeout(function() {
+            document.getElementById('calendlyPopup').classList.add('active');
+        }, 20000);
+
+        // Close popup function
+        function closeCalendlyPopup() {
+            document.getElementById('calendlyPopup').classList.remove('active');
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('calendlyPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCalendlyPopup();
+            }
+        });
+    </script>
+</body>
+</html>
